@@ -83,6 +83,7 @@ cases_raw = read_csv("./homicide-data.csv")
 cases_nest =
   cases_raw %>%
   mutate(city_state = str_c(city, ",", state)) %>% #get new variable city_state
+  mutate(disposition = str_replace_all(disposition, c("Closed without arrest" = "Unsolved", "Open/No arrest" = "Unsolved"))) %>% #combine two categories to one category called unsolved
   group_by(city_state) %>%
   nest()#get data frames for each city_state
 ```
@@ -102,6 +103,11 @@ cases_nest %>%
 **2. Summarize the number of unsolved homicides (those for which the disposition is “Closed without arrest” or “Open/No arrest”).**
 
 ```{r}
-
+cases_nest %>%
+  unnest %>% 
+  filter(disposition == "Unsolved") %>%
+  group_by(city_state) %>%
+  summarize(n_unsolved = n()) %>%
+  knitr::kable(digits = 0)
 ```
 
