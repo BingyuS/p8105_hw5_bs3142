@@ -111,3 +111,17 @@ cases_nest %>%
   knitr::kable(digits = 0)
 ```
 
+**3. For the city of Baltimore, MD, use the prop.test function to estimate the proportion of homicides that are unsolved; save the output of prop.test as an R object, apply the broom::tidy to this object and pull the estimated proportion and confidence intervals from the resulting tidy dataframe.**
+
+```{r}
+cases_nest$data[[3]] %>%
+  group_by(disposition) %>%
+  summarize(n_cases_Bal = n()) %>%
+  knitr::kable(digits = 0)
+
+prop_bal = prop.test(1825, 2827)
+
+broom::tidy(prop_bal) %>%
+  pull(estimate)
+```
+
