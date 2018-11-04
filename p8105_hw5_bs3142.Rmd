@@ -6,9 +6,15 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
 
 library(tidyverse)
+
+theme_set(theme_bw() + theme(legend.position = "bottom"))
 ```
 
 ## Problem 1
@@ -48,6 +54,13 @@ tidy_study %>%
   group_by(treatment, id) %>% 
   ggplot(aes(x = week, y = value, color = id)) +
   geom_line() +
-  facet_grid(~treatment)
+  facet_grid(~treatment) +
+  labs(
+    title = "Observations of Each Subject Over Time by Treatment"
+  ) +
+  viridis::scale_color_viridis(
+    name = "Subject ID",
+    discrete = TRUE
+  )
 ```
 
