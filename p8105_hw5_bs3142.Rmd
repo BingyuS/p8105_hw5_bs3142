@@ -48,7 +48,7 @@ tidy_study =
 
 ### Spaghetti plot
 
-```{r}
+```{r, dpi = 300}
 tidy_study %>%
   mutate(week = as.numeric(week)) %>%
   group_by(treatment, id) %>% 
@@ -61,6 +61,10 @@ tidy_study %>%
   viridis::scale_color_viridis(
     name = "Subject ID",
     discrete = TRUE
-  )
+  ) +
+  scale_x_continuous(breaks = c(1:8))
 ```
 
+Comment:
+
+In general, there is an increase in performance over time in the experimental group comparing to the control group, suggesting a positive correlation between treatment and participants' performance.
