@@ -80,48 +80,47 @@ cases_raw = read_csv("./homicide-data.csv")
 ### Data manipulation
 
 ```{r}
-cases_nest =
+cases_tidy =
   cases_raw %>%
   mutate(city_state = str_c(city, ",", state)) %>% #get new variable city_state
-  mutate(disposition = str_replace_all(disposition, c("Closed without arrest" = "Unsolved", "Open/No arrest" = "Unsolved"))) %>% #combine two categories to one category called unsolved
-  group_by(city_state) %>%
-  nest()#get data frames for each city_state
+  mutate(disposition = str_replace_all(disposition, c("Closed without arrest" = "Unsolved", "Open/No arrest" = "Unsolved"))) #combine two categories to one category called unsolved
 ```
 
 #### Q & A
 
-**1. Summarize within cities to obtain the total number of homicides.**
+**1. Summarize within cities to obtain the total number of homicides, and the number of unsolved homicides (those for which the disposition is “Closed without arrest” or “Open/No arrest”).**
 
 ```{r}
-cases_nest %>%
-  unnest %>%
+cases_nest =
+  cases_tidy %>%
   group_by(city_state) %>%
-  count() %>%
-  knitr::kable(digits = 0)
-```
+  nest() %>%
+  mutate(
+    n_total = map(.x = data, ~ .x %>% 
+                    pull(disposition) %>%
+                    length()),
+    n_unsolved = map(.x = data, ~ .x %>%
+                       filter(disposition == "Unsolved") %>%
+                       pull(disposition) %>%
+                       length())
+  ) %>%
+  select(-data) %>%
+  unnest()
 
-**2. Summarize the number of unsolved homicides (those for which the disposition is “Closed without arrest” or “Open/No arrest”).**
-
-```{r}
 cases_nest %>%
-  unnest %>% 
-  filter(disposition == "Unsolved") %>%
-  group_by(city_state) %>%
-  summarize(n_unsolved = n()) %>%
   knitr::kable(digits = 0)
 ```
 
 **3. For the city of Baltimore, MD, use the prop.test function to estimate the proportion of homicides that are unsolved; save the output of prop.test as an R object, apply the broom::tidy to this object and pull the estimated proportion and confidence intervals from the resulting tidy dataframe.**
 
 ```{r}
-cases_nest$data[[3]] %>%
-  group_by(disposition) %>%
-  summarize(n_cases_Bal = n()) %>%
-  knitr::kable(digits = 0)
 
-prop_bal = prop.test(1825, 2827)
-
-broom::tidy(prop_bal) %>%
-  pull(estimate)
 ```
+
+**4. Run prop.test for each of the cities in your dataset, and extract both the proportion of unsolved homicides and the confidence interval for each. Do this within a “tidy” pipeline, making use of purrr::map, purrr::map2, list columns and unnest as necessary to create a tidy dataframe with estimated proportions and CIs for each city.**
+
+```{r}
+
+```
+
 
