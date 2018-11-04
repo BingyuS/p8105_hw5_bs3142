@@ -68,3 +68,18 @@ tidy_study %>%
 Comment:
 
 In general, there is an increase in performance over time in the experimental group comparing to the control group, suggesting a positive correlation between treatment and participants' performance.
+
+## Problem 2
+
+### Data import
+
+```{r}
+cases_raw = read_csv("./homicide-data.csv")
+```
+
+### Data manipulation
+
+```{r}
+
+```
+
