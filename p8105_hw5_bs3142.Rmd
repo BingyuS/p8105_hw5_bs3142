@@ -7,5 +7,24 @@ output: github_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+## Problem 1
+
+### Data import
+
+```{r}
+read_study = function(flnm) {
+  read_csv(flnm) %>%
+    mutate(filename = flnm)
+}
+
+study_data = 
+  list.files(path = "./data",
+             pattern = "*.csv",
+             full.names = TRUE) %>%
+  map_df(~ read_study(.))
 ```
 
