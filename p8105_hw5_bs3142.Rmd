@@ -129,10 +129,10 @@ prop_test = function(x, n) {
   
   prop_result = prop.test(x, n)
   
-  data_frame(estimate = broom::tidy(prop_result) %>% pull(estimate),
-             conf.low = broom::tidy(prop_result) %>% pull(conf.low),
-             conf.high = broom::tidy(prop_result) %>% pull(conf.high)
-             )
+  tibble(estimate = broom::tidy(prop_result) %>% pull(estimate),
+         conf.low = broom::tidy(prop_result) %>% pull(conf.low),
+         conf.high = broom::tidy(prop_result) %>% pull(conf.high)
+         )
   
 }
 
@@ -146,4 +146,15 @@ prop_test_results %>%
   knitr::kable(digits = 3)
 ```
 
+**4. Create a plot that shows the estimates and CIs for each city – check out geom_errorbar for a way to add error bars based on the upper and lower limits. Organize cities according to the proportion of unsolved homicides.**
+
+```{r}
+prop_test_results %>%
+  mutate(city_state = forcats::fct_reorder(city_state, estimate)) %>%
+  ggplot(aes(x = city_state, y = estimate)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  
+```
 
