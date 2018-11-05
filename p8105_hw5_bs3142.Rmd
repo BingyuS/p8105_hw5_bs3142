@@ -129,15 +129,21 @@ prop_test = function(x, n) {
   
   prop_result = prop.test(x, n)
   
-  tibble(
-    estimate = broom::tidy(prop_result) %>% pull(estimate),
-    conf.low = broom::tidy(prop_result) %>% pull(conf.low),
-    conf.high = broom::tidy(prop_result) %>% pull(conf.high)
-  )
+  data_frame(estimate = broom::tidy(prop_result) %>% pull(estimate),
+             conf.low = broom::tidy(prop_result) %>% pull(conf.low),
+             conf.high = broom::tidy(prop_result) %>% pull(conf.high)
+             )
   
 }
 
-prop_test_results = map2(.x = cases_nest$n_unsolved, .y = cases_nest$n_total, ~ prop_test(x = .x, n = .y)) 
+prop_test_results = 
+  cases_nest %>%
+  mutate(statistics = map2(.x = cases_nest$n_unsolved, .y = cases_nest$n_total, ~ prop_test(x = .x, n = .y))) %>%
+  select(city_state, statistics) %>%
+  unnest()
+
+prop_test_results %>%
+  knitr::kable(digits = 3)
 ```
 
 
