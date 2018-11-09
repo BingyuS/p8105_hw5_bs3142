@@ -10,11 +10,11 @@ knitr::opts_chunk$set(
   fig.width = 6,
   fig.asp = .6,
   out.width = "90%"
-)
+) 
 
-library(tidyverse)
+library(tidyverse) #load library
 
-theme_set(theme_bw() + theme(legend.position = "bottom"))
+theme_set(theme_bw() + theme(legend.position = "bottom")) #define graph format
 ```
 
 ## Problem 1
@@ -28,7 +28,7 @@ read_study = function(flnm) {
 }
 
 study_data = 
-  list.files(path = "./data",
+  list.files(path = "./data/data_exp",
              pattern = "*.csv",
              full.names = TRUE) %>%
   map_df(~read_study(.x))
@@ -39,7 +39,7 @@ study_data =
 ```{r}
 tidy_study =
   study_data %>%
-  mutate(filename = str_replace_all(filename, c("^./data/" = "", ".csv$" = ""))) %>%
+  mutate(filename = str_replace_all(filename, c("^./data/data_exp/" = "", ".csv$" = ""))) %>%
   separate(filename, into = c("treatment", "id"), sep = "_") %>%
   mutate(treatment = str_replace_all(treatment, c("con" = "control", "exp" = "experiment"))) %>%
   gather(key = week, value = value, week_1:week_8) %>%
@@ -74,7 +74,7 @@ In general, there is an increase in performance over time in the experimental gr
 ### Data import
 
 ```{r}
-cases_raw = read_csv("./homicide-data.csv")
+cases_raw = read_csv("./data/homicide-data.csv")
 ```
 
 ### Data manipulation
